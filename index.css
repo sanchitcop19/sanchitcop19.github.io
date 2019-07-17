@@ -1,0 +1,96 @@
+/* Import */
+@import url(https://fonts.googleapis.com/css?family=Quicksand:300,400);
+@import url(https://netdna.bootstrapcdn.com/font-awesome/4.0.3/css/font-awesome.css);
+
+/* Basic Reset */
+* {
+	margin: 0;
+	padding: 0;
+}
+body {
+	background: #dddfde;
+}
+
+/* Social Presentation */
+h2.title {
+	font-family: "Nothing You Could Do", sans-serif;
+	font-size: 40px;
+	font-weight: 200;
+	font-weight: 300;
+	color: #000000;
+	text-align: center;
+	padding: 100px 0 0 0;
+	text-shadow: 0 0 1px rgba(0, 0, 0, 0.1);
+}
+.social .line {
+	position: absolute;
+    display: none;
+	top: 0; left: 0px;
+	width: 100%; height: 5px;
+	background: #14A76C;
+	box-shadow: 0 5px 10px rgba(0, 0, 0, 0.2);
+	z-index: 0;
+}
+.social ul {
+    display: flex;
+	position: fixed;
+	left: 50%; margin-left: -12em;
+	list-style: none;
+	color: #000;
+}
+.social ul li {
+	float: left;
+}
+.social ul li a {
+	position: relative;
+	float: left;
+	background: #14A76C;
+	width: 3em;
+	height: 3em;
+	text-align: center;
+	color: #000;
+	padding: 0 0 30px 0;
+}
+.social ul li a:hover {
+	color: #fff;
+}
+.fa-facebook-f, .fa-reddit, .fa-youtube, .fa-instagram, .fa-file-pdf, .fa-github, .fa-flickr, .fa-linkedin-in, .ai-piazza {
+	padding: 10px 0 0 0;
+}
+
+/* Pseudo Elements */
+.social ul li a:after {
+	content: "";
+	position: absolute;
+	bottom: 0px; left: 0;
+	width: 1px; height: 1px;
+	border: 24px solid transparent;
+	border-bottom: 24px solid #dddfde;
+	z-index: 0;
+}
+
+/* Hover */
+.social ul li.facebook a:hover {
+	background: #3b5998;
+}
+.social ul li.instagram a:hover {
+	background: #e4405f;
+}
+.social ul li.reddit a:hover {
+	background: #ff5700;
+}
+.social ul li.linkedin a:hover { 
+	background: #1c66c2; 
+}
+.social ul li.github a:hover {
+	background: #211F1F;
+}
+.social ul li.youtube a:hover {
+	background: #FF0000;
+}
+.social ul li.resume a:hover {
+	background: #242424;
+}
+.social ul li.piazza a:hover {
+	background: #3e7aab; 
+}
