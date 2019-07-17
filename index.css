@@ -94,3 +94,15 @@ h2.title {
 .social ul li.piazza a:hover {
 	background: #3e7aab; 
 }
+
+@media only screen and (max-width: 321px) {
+  .social ul li.piazza {
+    display: none;!important
+  }
+  .social ul li.reddit {
+    display: none;!important
+  }
+  .social ul {
+    margin-left: -9em;
+  }
+}
