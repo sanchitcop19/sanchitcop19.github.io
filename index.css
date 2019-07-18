@@ -6,6 +6,7 @@
 * {
 	margin: 0;
 	padding: 0;
+	overflow: hidden;
 }
 body {
 	background: #dddfde;
@@ -19,7 +20,7 @@ h2.title {
 	font-weight: 300;
 	color: #000000;
 	text-align: center;
-	padding: 100px 0 0 0;
+	/* padding: 100px 0 0 0; */
 	text-shadow: 0 0 1px rgba(0, 0, 0, 0.1);
 }
 .social .line {
@@ -105,4 +106,19 @@ h2.title {
   .social ul {
     margin-left: -9em;
   }
+}
+
+#slogan{
+    font-family: "Nothing You Could Do", sans-serif;
+    display: block;
+    text-align: center;
+    position: relative;
+    top: 50%;
+}
+.center{
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate3d(-50%, -50%, 0);
+    width: 100%;
 }
