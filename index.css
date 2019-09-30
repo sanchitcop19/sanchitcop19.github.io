@@ -12,6 +12,8 @@ body {
 	background: #dddfde;
 }
 
+.devpost-icons{position: relative;left: 0%;top: 20%;}
+
 /* Social Presentation */
 h2.title {
 	font-family: "Nothing You Could Do", sans-serif;
@@ -74,14 +76,18 @@ h2.title {
 .social ul li.facebook a:hover {
 	background: #3b5998;
 }
+.social ul li.devpost a:hover {
+	background: #FFFFFF;
+	color: blue;
+}
 .social ul li.instagram a:hover {
 	background: #e4405f;
 }
 .social ul li.reddit a:hover {
 	background: #ff5700;
 }
-.social ul li.linkedin a:hover { 
-	background: #1c66c2; 
+.social ul li.linkedin a:hover {
+	background: #1c66c2;
 }
 .social ul li.github a:hover {
 	background: #211F1F;
@@ -93,11 +99,11 @@ h2.title {
 	background: #242424;
 }
 .social ul li.piazza a:hover {
-	background: #3e7aab; 
+	background: #3e7aab;
 }
 
 @media only screen and (max-width: 321px) {
-  .social ul li.piazza {
+  .social ul li.youtube {
     display: none;!important
   }
   .social ul li.reddit {

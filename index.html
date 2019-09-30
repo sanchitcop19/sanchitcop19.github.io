@@ -55,14 +55,33 @@
 				<i class="fab fa-youtube fa-2x"></i>
 			</a>
 		</li>
-		<li class="piazza">
-			<a href="#">
-				<i class="ai ai-piazza ai-2x"></i>
+		<li class="devpost">
+			<a href="https://devpost.com/sanchitb" onmouseover="switch_devpost(1)" onmouseleave = "switch_devpost(0)">
+				<img src="devpost.png" id = "devpost-icon" class="devpost-icons"></i>
+				<img src="devpost-blue.png" style = "display: none" id = "devpost-icon-blue" class="devpost-icons"></i>
 			</a>
 		</li>
 	</ul>
 </div>
-<a href="https://icons8.com/icon/50173/source-code" style = "display: none">Source Code icon by Icons8</a>
+        <script>
+            var switch_devpost = function(toggle){
+                var black = document.getElementById('devpost-icon');
+                var blue = document.getElementById('devpost-icon-blue');
+                if (toggle == 1){
+                    blue.style = "display: inline-block";
+                    black.style = "display: none"
+                }
+                else{
+                    black.style = "display: inline-block";
+                    blue.style = "display: none"
+                }
+
+            }
+        </script>
+<div class="citations" style="display: none">
+<a href="https://icons8.com/icon/50173/source-code">Source Code icon by Icons8</a>
+<a href="https://iconscout.com/icon/dev-post" target="_blank">Dev post Icon</a> by <a href="https://iconscout.com/contributors/icons8" target="_blank">Icons8</a>
+</div>
 <div class = "center">
 <h2 class="title">Sanchit Batra</h2>
 <h3 id = "slogan">iDesign. iCreate. iCode.</h3>
