@@ -120,6 +120,7 @@ h2.title {
     text-align: center;
     position: relative;
     top: 50%;
+    font-size: 110%;
 }
 .center{
     position: absolute;
