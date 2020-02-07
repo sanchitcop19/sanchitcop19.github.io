@@ -129,3 +129,7 @@ h2.title {
     transform: translate3d(-50%, -50%, 0);
     width: 100%;
 }
+
+.hide{
+	display: none;
+}
