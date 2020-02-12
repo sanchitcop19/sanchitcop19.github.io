@@ -1,0 +1,22 @@
+{
+  "name": "personal-website",
+  "version": "1.0.0",
+  "description": "Sanchit Batra's Personal Website",
+  "main": "server.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/sanchitcop19/sanchitcop19.github.io.git"
+  },
+  "author": "Sanchit Batra",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/sanchitcop19/sanchitcop19.github.io/issues"
+  },
+  "homepage": "https://github.com/sanchitcop19/sanchitcop19.github.io#readme",
+  "dependencies": {
+    "express": "^4.17.1"
+  }
+}
