@@ -24,6 +24,13 @@ h2.title {
 	/* padding: 100px 0 0 0; */
 	text-shadow: 0 0 1px rgba(0, 0, 0, 0.1);
 }
+
+.social{
+	position: absolute;
+	left: 50%;
+	transform: translate(-50%);
+}
+
 .social .line {
 	position: absolute;
     display: none;
@@ -35,8 +42,6 @@ h2.title {
 }
 .social ul {
     display: flex;
-	position: fixed;
-	left: 50%; margin-left: -12em;
 	list-style: none;
 	color: #000;
 }
@@ -56,7 +61,7 @@ h2.title {
 .social ul li a:hover {
 	color: #fff;
 }
-.fa-facebook-f, .fa-reddit, .fa-youtube, .fa-instagram, .fa-file-pdf, .fa-github, .fa-flickr, .fa-linkedin-in, .ai-piazza {
+.fa-facebook-f, .fa-reddit, .fa-youtube, .fa-instagram, .fa-file-pdf, .fa-github, .fa-flickr, .fa-linkedin-in, .ai-piazza, .fa-ticket-alt{
 	padding: 10px 0 0 0;
 }
 
@@ -101,17 +106,21 @@ h2.title {
 	background: #3e7aab;
 }
 
-@media only screen and (max-width: 321px) {
+.social ul li.concert-archives a:hover {
+	background: #333;
+	color: #00b384;
+}
+
+
+@media only screen and (max-width: 376px) {
   .social ul li.youtube {
     display: none;!important
   }
   .social ul li.reddit {
     display: none;!important
   }
-  .social ul {
-    margin-left: -9em;
-  }
 }
+
 
 #slogan{
     font-family: "Nothing You Could Do", sans-serif;
