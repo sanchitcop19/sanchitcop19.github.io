@@ -8,7 +8,7 @@
 	overflow: hidden;
 }
 body {
-	background: #dddfde;
+	background: #000;
 }
 
 .devpost-icons{position: relative;left: 0%;top: 10%;height: 85%;}
@@ -16,10 +16,10 @@ body {
 /* Social Presentation */
 h2.title {
 	font-family: "Nothing You Could Do", sans-serif;
-	font-size: 40px;
+	font-size: 60px;
 	font-weight: 200;
 	font-weight: 300;
-	color: #000000;
+	color: #FFF;
 	text-align: center;
 	/* padding: 100px 0 0 0; */
 	text-shadow: 0 0 1px rgba(0, 0, 0, 0.1);
@@ -70,9 +70,9 @@ h2.title {
 	content: "";
 	position: absolute;
 	bottom: 0px; left: 0;
-	width: 1px; height: 1px;
+	height: 1px;
 	border: 24px solid transparent;
-	border-bottom: 24px solid #dddfde;
+	border-bottom: 24px solid #000;
 	z-index: 0;
 }
 
@@ -128,7 +128,8 @@ h2.title {
     text-align: center;
     position: relative;
     top: 50%;
-    font-size: 110%;
+    font-size: 170%;
+    color: #FFF;
 }
 .center{
     position: absolute;
