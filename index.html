@@ -134,6 +134,18 @@
                         <i class="fab fa-youtube fa-2x"></i>
                     </a>
                 </li>
+                <li class="projects-link">
+                    <a
+                        href="javascript:void(0)"
+                        id="projects-toggle"
+                        onclick="toggleProjects()"
+                        aria-haspopup="dialog"
+                        aria-expanded="false"
+                        aria-controls="projects-modal"
+                    >
+                        <i class="fas fa-rocket fa-2x"></i>
+                    </a>
+                </li>
             </ul>
         </div>
         <script src="static/js/index.js"></script>
@@ -158,6 +170,59 @@
         <div class="center">
             <h2 class="title">Sanchit Batra</h2>
             <h3 id="slogan">Senior Software Engineer</h3>
+        </div>
+        <div
+            class="projects-modal"
+            id="projects-modal"
+            role="dialog"
+            aria-modal="true"
+            aria-labelledby="projects-modal-title"
+        >
+            <div
+                class="projects-modal-backdrop"
+                onclick="toggleProjects()"
+            ></div>
+            <div class="projects-modal-content">
+                <button
+                    class="projects-modal-close"
+                    onclick="toggleProjects()"
+                    aria-label="Close projects"
+                >
+                    &times;
+                </button>
+                <span class="projects-label" id="projects-modal-title"
+                    >Projects</span
+                >
+                <div class="project-cards">
+                    <a
+                        class="project-card"
+                        href="https://hh-map.com/"
+                        target="_blank"
+                        rel="noreferrer"
+                    >
+                        <span class="project-name"
+                            ><i class="fas fa-map-marker-alt"></i> Happy Hour
+                            Map</span
+                        >
+                        <span class="project-desc"
+                            >Seattle's best drink &amp; food deals</span
+                        >
+                    </a>
+                    <a
+                        class="project-card"
+                        href="https://credits-sanchitcop19.vercel.app/"
+                        target="_blank"
+                        rel="noreferrer"
+                    >
+                        <span class="project-name"
+                            ><i class="fas fa-credit-card"></i> Credits</span
+                        >
+                        <span class="project-desc"
+                            >Track your card rewards before they expire</span
+                        >
+                    </a>
+                </div>
+            </div>
         </div>
         <link
             rel="stylesheet"

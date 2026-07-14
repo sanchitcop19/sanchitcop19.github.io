@@ -61,7 +61,7 @@ h2.title {
 .social ul li a:hover {
 	color: #fff;
 }
-.fa-facebook-f, .fa-reddit, .fa-youtube, .fa-instagram, .fa-file-pdf, .fa-github, .fa-flickr, .fa-linkedin-in, .ai-piazza, .fa-ticket-alt{
+.fa-facebook-f, .fa-reddit, .fa-youtube, .fa-instagram, .fa-file-pdf, .fa-github, .fa-flickr, .fa-linkedin-in, .ai-piazza, .fa-ticket-alt, .fa-rocket{
 	padding: 10px 0 0 0;
 }
 
@@ -111,6 +111,10 @@ h2.title {
 	color: #00b384;
 }
 
+.social ul li.projects-link a:hover {
+	background: #21ce99;
+}
+
 
 @media only screen and (max-width: 376px) {
   .social ul li.youtube {
@@ -141,4 +145,124 @@ h2.title {
 
 .hide{
 	display: none;
+}
+
+/* Projects modal */
+.projects-modal {
+	display: none;
+	position: fixed;
+	inset: 0;
+	z-index: 100;
+	align-items: center;
+	justify-content: center;
+	overflow: visible;
+}
+
+.projects-modal.open {
+	display: flex;
+}
+
+.projects-modal-backdrop {
+	position: absolute;
+	inset: 0;
+	background: rgba(0, 0, 0, 0.8);
+}
+
+.projects-modal-content {
+	position: relative;
+	background: #000;
+	border: 1px solid #21ce99;
+	border-radius: 16px;
+	padding: 40px 34px 30px;
+	max-width: 90vw;
+	max-height: 85vh;
+	overflow: auto;
+	text-align: center;
+	box-shadow: 0 10px 40px rgba(33, 206, 153, 0.25);
+}
+
+.projects-modal-close {
+	position: absolute;
+	top: 6px;
+	right: 12px;
+	background: none;
+	border: none;
+	color: #21ce99;
+	font-size: 26px;
+	line-height: 1;
+	cursor: pointer;
+	padding: 6px;
+}
+
+.projects-modal-close:hover {
+	color: #fff;
+}
+
+.projects-label {
+	display: block;
+	font-family: "Quicksand", sans-serif;
+	font-size: 11px;
+	letter-spacing: 4px;
+	text-transform: uppercase;
+	color: #21ce99;
+	margin-bottom: 18px;
+}
+
+.project-cards {
+	display: flex;
+	justify-content: center;
+	align-items: flex-start;
+	gap: 16px;
+	flex-wrap: wrap;
+}
+
+.project-card {
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	gap: 6px;
+	min-width: 170px;
+	padding: 12px 22px;
+	border: 1px solid #21ce99;
+	border-radius: 12px;
+	text-decoration: none;
+	font-family: "Quicksand", sans-serif;
+	transition: background 0.25s ease, transform 0.25s ease, box-shadow 0.25s ease;
+}
+
+.project-card .project-name {
+	display: flex;
+	align-items: center;
+	gap: 6px;
+	font-size: 14px;
+	font-weight: 700;
+	color: #21ce99;
+	transition: color 0.25s ease;
+}
+
+.project-card .project-desc {
+	font-size: 11px;
+	color: #999;
+	transition: color 0.25s ease;
+}
+
+.project-card:hover {
+	background: #21ce99;
+	transform: translateY(-3px);
+	box-shadow: 0 8px 20px rgba(33, 206, 153, 0.35);
+}
+
+.project-card:hover .project-name,
+.project-card:hover .project-desc {
+	color: #000;
+}
+
+@media only screen and (max-width: 500px) {
+	.project-cards {
+		flex-direction: column;
+		align-items: center;
+	}
+	.projects-modal-content {
+		padding: 36px 20px 24px;
+	}
 }
