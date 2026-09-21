@@ -184,6 +184,11 @@ body {
 
 #hero-name {
   font-size: clamp(3.4rem, 13vw, 9rem);
+  /* background-clip: text paints inside the box, so a deep descender like
+     Instrument Serif's J gets sheared off by the tight display line-height.
+     The extra leading and padding give the glyph somewhere to land. */
+  line-height: 1.18;
+  padding-bottom: 0.08em;
   background: linear-gradient(105deg, #ffffff 12%, var(--accent) 48%, var(--warm) 80%, #ffffff 98%);
   background-size: 240% 100%;
   -webkit-background-clip: text;
@@ -228,31 +233,78 @@ body {
 .scroll-cue {
   position: absolute;
   bottom: 38px;
-  left: 50%;
-  transform: translateX(-50%);
+  /* Centred with auto margins, not translateX: the `rise` animation below
+     finishes on `transform: none`, which would wipe out a centring
+     transform and shove the cue half its own width to the right. */
+  left: 0;
+  right: 0;
+  width: fit-content;
+  margin-inline: auto;
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 12px;
-  color: var(--faint);
+  gap: 10px;
+  color: var(--muted);
   font-size: 11px;
-  letter-spacing: 0.3em;
+  letter-spacing: 0.28em;
   text-transform: uppercase;
   text-decoration: none;
   transition: color var(--motion);
   animation: rise var(--motion-slow) 420ms both;
 }
 
-.scroll-cue:hover { color: var(--accent); }
+.scroll-cue:hover,
+.scroll-cue:focus-visible { color: var(--accent); outline: none; }
 
-.cue-line {
+/* A dot falling down the track, so the direction is never in question. */
+.cue-track {
+  position: relative;
   width: 1px;
   height: 46px;
-  background: linear-gradient(180deg, var(--faint), transparent);
-  transition: background var(--motion);
+  background: linear-gradient(180deg, currentColor, transparent);
+  opacity: 0.55;
+  overflow: hidden;
 }
 
-.scroll-cue:hover .cue-line { background: linear-gradient(180deg, var(--accent), transparent); }
+.cue-track::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 50%;
+  width: 3px;
+  height: 9px;
+  margin-left: -1.5px;
+  border-radius: 2px;
+  background: var(--accent);
+  box-shadow: 0 0 8px var(--accent-glow);
+  animation: cue-fall 2.1s cubic-bezier(0.22, 1, 0.36, 1) infinite;
+}
+
+@keyframes cue-fall {
+  0%        { transform: translateY(-11px); opacity: 0; }
+  22%       { opacity: 1; }
+  72%       { opacity: 1; }
+  100%      { transform: translateY(46px);  opacity: 0; }
+}
+
+.cue-arrow {
+  width: 22px;
+  height: 22px;
+  stroke: currentColor;
+  stroke-width: 1.6;
+  fill: none;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  animation: cue-bob 2.1s cubic-bezier(0.22, 1, 0.36, 1) infinite;
+}
+
+@keyframes cue-bob {
+  0%, 100% { transform: translateY(0);   opacity: 0.75; }
+  50%      { transform: translateY(5px); opacity: 1;    }
+}
+
+.scroll-cue:hover .cue-arrow,
+.scroll-cue:focus-visible .cue-arrow { opacity: 1; }
 
 /* ── Timeline ───────────────────────────────────────────────── */
 
@@ -696,4 +748,6 @@ body.lb-locked { overflow: hidden; }
   .closing > * { opacity: 1; transform: none; }
   .frame img { opacity: 1; transform: none; }
   #bokeh, .grain { display: none; }
+  .cue-track::after { display: none; }
+  .cue-arrow { animation: none; opacity: 1; }
 }
