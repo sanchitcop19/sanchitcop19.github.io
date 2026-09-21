@@ -477,74 +477,6 @@ body {
   text-align: center;
 }
 
-.cake {
-  position: relative;
-  width: 92px;
-  height: 92px;
-  margin: 0 auto 6px;
-  cursor: pointer;
-  transition: transform var(--motion);
-  -webkit-tap-highlight-color: transparent;
-}
-
-.cake:hover, .cake:focus-visible { transform: translateY(-4px) scale(1.05); outline: none; }
-
-.cake-body {
-  position: absolute;
-  bottom: 6px; left: 12px;
-  width: 68px; height: 34px;
-  border-radius: 7px 7px 10px 10px;
-  background: linear-gradient(180deg, #2b3a35, #16211d);
-  border: 1px solid var(--border);
-}
-
-.cake-top {
-  position: absolute;
-  bottom: 38px; left: 10px;
-  width: 72px; height: 13px;
-  border-radius: 8px;
-  background: linear-gradient(180deg, var(--accent), #14a77c);
-  box-shadow: 0 0 22px var(--accent-dim);
-}
-
-.candle {
-  position: absolute;
-  bottom: 50px; left: 44px;
-  width: 4px; height: 20px;
-  border-radius: 2px;
-  background: linear-gradient(180deg, var(--warm), #d99b74);
-}
-
-.flame {
-  position: absolute;
-  bottom: 70px; left: 42.5px;
-  width: 7px; height: 11px;
-  border-radius: 50% 50% 50% 50% / 62% 62% 38% 38%;
-  background: radial-gradient(circle at 50% 70%, #fff6c9, var(--warm) 55%, rgba(255, 150, 80, 0) 78%);
-  box-shadow: 0 0 16px rgba(255, 201, 163, 0.75);
-  transform-origin: 50% 100%;
-  animation: flicker 1.5s ease-in-out infinite;
-  transition: opacity var(--motion), transform var(--motion);
-}
-
-@keyframes flicker {
-  0%, 100% { transform: scale(1)    rotate(-2deg); opacity: 1;    }
-  50%      { transform: scale(1.14) rotate(2deg);  opacity: 0.86; }
-}
-
-.cake.is-out .flame { opacity: 0; transform: scale(0.3) translateY(-6px); animation: none; }
-
-.wish-hint {
-  margin: 0 0 42px;
-  color: var(--faint);
-  font-size: 11px;
-  letter-spacing: 0.3em;
-  text-transform: uppercase;
-  transition: opacity var(--motion), color var(--motion);
-}
-
-.wish-hint.is-done { color: var(--accent); }
-
 .closing-title {
   font-size: clamp(2.1rem, 6vw, 3.4rem);
   margin-bottom: 22px;
@@ -574,11 +506,9 @@ body {
   transition: opacity var(--motion-slow), transform var(--motion-slow);
 }
 .closing.is-in > * { opacity: 1; transform: none; }
-.closing.is-in .cake        { transition-delay: 0ms;   }
-.closing.is-in .wish-hint   { transition-delay: 70ms;  }
-.closing.is-in .closing-title { transition-delay: 140ms; }
-.closing.is-in .closing-body  { transition-delay: 210ms; }
-.closing.is-in .signoff       { transition-delay: 280ms; }
+.closing.is-in .closing-title { transition-delay: 0ms;   }
+.closing.is-in .closing-body  { transition-delay: 80ms;  }
+.closing.is-in .signoff       { transition-delay: 160ms; }
 
 /* ── Setup panel (author-only, auto-hides) ──────────────────── */
 
@@ -719,15 +649,6 @@ body {
 .lb-nav[hidden] { display: none; }
 
 body.lb-locked { overflow: hidden; }
-
-#confetti {
-  position: fixed;
-  inset: 0;
-  z-index: 70;
-  width: 100%;
-  height: 100%;
-  pointer-events: none;
-}
 
 /* ── Responsive ─────────────────────────────────────────────── */
 
