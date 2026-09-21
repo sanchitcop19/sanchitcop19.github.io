@@ -17,12 +17,11 @@ window.BIRTHDAY = {
 
   /* ── Hero ─────────────────────────────────────────────── */
 
-  name: "Jane",
+  name: "Ms. Jane Han",
 
   eyebrow: "Happy Birthday",
 
-  subtitle: "Some people you meet and it's like you've always known them. " +
-            "Here are a few of the moments that got us here.",
+  subtitle: "Every now and again I meet someone and feel like I've known them forever <3",
 
   note: "Best viewed with the sound of us arguing about where to eat.",
 

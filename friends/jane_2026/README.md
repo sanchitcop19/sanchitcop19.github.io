@@ -11,15 +11,35 @@ The fast way, from this folder:
 ```
 
 It resizes everything into `photos/` (long edge capped at 1800px, so the repo
-stays small and the page stays fast) and prints `moments` entries with the date
-already filled in from each photo's metadata. Paste those into `data.js`, write
-the titles and captions, then:
+stays small and the page stays fast), converts HEIC/HEIF to JPEG, and prints
+`moments` entries with the date already worked out. Paste those into `data.js`,
+write the titles and captions, then:
 
 ```bash
 git add . && git commit -m "add photos" && git push
 ```
 
 The live page updates about a minute later.
+
+### Where the dates come from
+
+Tried in this order, first hit wins:
+
+1. **EXIF capture time**, read in the camera's own local time. Spotlight
+   (`mdls`) reports UTC, which rolls a late-evening photo into the next day
+   and sometimes the next month — an 11pm Halloween shot comes back as
+   November 1st. The script reads the local field instead.
+2. **A Google Takeout `.json` sidecar.** Takeout strips EXIF out of the image
+   and puts the real capture time in a neighbouring JSON file; the script
+   reads `photoTakenTime` from it.
+3. **A date in the filename** — `PXL_20250629_...`, `IMG_20240629_...`,
+   `20250809_...` and similar.
+
+If none of those hit, the date is left blank rather than guessed. An undated
+moment renders cleanly — it just has no date chip.
+
+**Photos pasted into a chat lose all of this.** The paste pipeline strips
+metadata, so always point the script at the original files.
 
 ## Doing it by hand
 
