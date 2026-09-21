@@ -16,49 +16,56 @@
    ============================================================ */
 
 window.BIRTHDAY = {
+    /* ── Hero ─────────────────────────────────────────────── */
 
-  /* ── Hero ─────────────────────────────────────────────── */
+    name: "Ms. Jane Han",
 
-  name: "Jane",
+    eyebrow: "Happy Birthday",
 
-  eyebrow: "Happy Birthday",
+    subtitle: "Every now and again I meet someone and it's like I've known them forever <3",
 
-  subtitle: "Some people you meet and it's like you've always known them. " +
-            "Here are a few of the moments that got us here.",
+    /* ── The timeline ─────────────────────────────────────── */
+    /* Oldest first. They alternate left/right automatically. */
 
-  note: "Best viewed with the sound of us arguing about where to eat.",
+    moments: [
+        { photo: "photos/2024-06-tp-dress.jpg", date: "June 2024", title: "The first time you laid hands on me" },
+        { photo: "photos/2024-07-mylar.jpg", date: "July 2024", title: "Everybody should watch The Great" },
+        { photo: "photos/2024-09-capybara.jpg", date: "September 2024", title: "The first time you turned 18 or smth" },
+        { photo: "photos/2025-04-fries.jpg", date: "April 2025", title: "When you showed up like you always do" },
+        { photo: "photos/2025-04-concert-group.jpg", date: "April 2025", title: "The day Leprous gained a new fan" },
+        {
+            photo: "photos/2025-06-costume-rooftop.jpg",
+            date: "June 2025",
+            title: "Choosing cute over comfort as usual",
+        },
+        {
+            photo: "photos/2025-08-bubble-soccer.jpg",
+            date: "August 2025",
+            title: "The day we sent everyone flying",
+        },
+        { photo: "photos/2025-10-wednesday.jpg", date: "October 2025", title: "The day you taught me to color" },
+        { photo: "photos/2025-10-birthday-cake.jpg", date: "October 2025", title: "The day we got really drunk" },
+        {
+            photo: "photos/2025-12-badminton.jpg",
+            date: "December 2025",
+            title: "The day I slammed shuttles in your face",
+        },
+        { photo: "photos/2026-05-library.jpg", date: "May 2026", title: "The day I learnt we were close frens" },
+        { photo: "photos/2026-06-bar.jpg", date: "June 2026", title: "The day Luna's apartment was shot up" },
+        { photo: "photos/2026-06-venue.jpg", date: "June 2026", title: "The day you fell in love with Faith" },
+        {
+            photo: "photos/2026-07-coffee.jpg",
+            date: "July 2026",
+            title: "Because driving 40 min to get coffee is what sane people do",
+        },
+        { photo: "photos/2026-08-concert.jpg", date: "August 2026", title: "The day I saved you from getting moshed" },
+        { photo: "photos/2026-09-rocks.jpg", date: "September 2026", title: "The day you rested way too much" },
+    ],
 
-  /* ── The timeline ─────────────────────────────────────── */
-  /* Oldest first. They alternate left/right automatically. */
+    /* ── The closing note ─────────────────────────────────── */
 
-  moments: [
-    { photo: "photos/2024-06-tp-dress.jpg",       date: "June 2024",      title: "Haute couture, one ply" },
-    { photo: "photos/2024-07-mylar.jpg",          date: "July 2024",      title: "Three burritos" },
-    { photo: "photos/2024-09-capybara.jpg",       date: "September 2024", title: "Best in show" },
-    { photo: "photos/2025-04-fries.jpg",          date: "April 2025",     title: "Caught" },
-    { photo: "photos/2025-04-concert-group.jpg",  date: "April 2025",     title: "The whole crew" },
-    { photo: "photos/2025-06-costume-rooftop.jpg", date: "June 2025",     title: "Reporting for duty" },
-    { photo: "photos/2025-08-bubble-soccer.jpg",  date: "August 2025",    title: "Bubble soccer" },
-    { photo: "photos/2025-10-wednesday.jpg",      date: "October 2025",   title: "Committing to the bit" },
-    { photo: "photos/2025-10-birthday-cake.jpg",  date: "October 2025",   title: "Last year's cake" },
-    { photo: "photos/2025-12-badminton.jpg",      date: "December 2025",  title: "Court side" },
-    { photo: "photos/2026-05-library.jpg",        date: "May 2026",       title: "Scholars, allegedly" },
-    { photo: "photos/2026-06-bar.jpg",            date: "June 2026",      title: "Red curtain, small glasses" },
-    { photo: "photos/2026-06-venue.jpg",          date: "June 2026",      title: "Front of house" },
-    { photo: "photos/2026-07-coffee.jpg",         date: "July 2026",      title: "Coffee, outdoors, no agenda" },
-    { photo: "photos/2026-08-concert.jpg",        date: "August 2026",    title: "Second row, ears ringing" },
-    { photo: "photos/2026-09-rocks.jpg",          date: "September 2026", title: "Peak performance" }
-  ],
-
-  /* ── The closing note ─────────────────────────────────── */
-
-  closing: {
-    title:   "Happy Birthday, Jane",
-    body:    "Replace this with the real message.\n\n" +
-             "Blank lines work — this block keeps your line breaks, so you " +
-             "can let it breathe.",
-    signoff: "— Sanchit"
-  },
-
-  wishMade: "wish granted"
+    closing: {
+        title: "Love you 🫶",
+        signoff: "— Sanchit",
+    },
 };

@@ -115,6 +115,43 @@ h2.title {
 	background: #21ce99;
 }
 
+.social,
+.social ul {
+	overflow: visible;
+}
+
+.social ul li.projects-link,
+.social ul li.projects-link a {
+	overflow: visible;
+}
+
+.icon-tooltip {
+	position: absolute;
+	top: 100%;
+	left: 50%;
+	transform: translateX(-50%) translateY(4px);
+	margin-top: 12px;
+	background: #000;
+	border: 1px solid #21ce99;
+	color: #21ce99;
+	font-family: "Quicksand", sans-serif;
+	font-size: 11px;
+	letter-spacing: 1px;
+	white-space: nowrap;
+	padding: 4px 10px;
+	border-radius: 6px;
+	opacity: 0;
+	pointer-events: none;
+	transition: opacity 0.2s ease, transform 0.2s ease;
+	z-index: 10;
+}
+
+.social ul li.projects-link a:hover .icon-tooltip,
+.social ul li.projects-link a:focus .icon-tooltip {
+	opacity: 1;
+	transform: translateX(-50%) translateY(0);
+}
+
 
 @media only screen and (max-width: 376px) {
   .social ul li.youtube {
