@@ -148,7 +148,16 @@
       });
     }, { rootMargin: "0px 0px -12% 0px", threshold: 0.12 });
 
-    revealables.forEach(function (el) { io.observe(el); });
+    /* Anything already at or above the fold on first paint — a reload that
+       restored the scroll position, or a #hash link — is revealed straight
+       away so it can never be stranded at zero opacity. */
+    revealables.forEach(function (el) {
+      if (el.getBoundingClientRect().top < window.innerHeight) {
+        el.classList.add("is-in");
+      } else {
+        io.observe(el);
+      }
+    });
   }
 
   /* ── Spine fill tracks scroll position ───────────────────── */
