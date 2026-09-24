@@ -27,14 +27,14 @@ window.BIRTHDAY = {
     /* ── A poem before the timeline ───────────────────────── */
 
     poem: [
-        "We began wrapped in pink and silver, laughing like old friends before we had the years to prove it.",
-        "Since then, your smile has kept finding the light—in birthday rooms, under concert glow, and across crowded tables.",
-        "We have worn costumes, chased shuttlecocks, sent each other flying, and called every ridiculous detour a good idea.",
-        "We have shared fries, books, coffee, loud music, and the quiet gift of simply showing up.",
-        "Some memories arrive dressed for a party, while others are just a tired pause on sun-warmed stone.",
-        "You make both kinds brighter, because even ordinary hours become stories beside you.",
-        "These photographs hold sixteen moments, but what they really frame is the steady miracle of being known and still being chosen.",
-        "Happy birthday, Jane; may the years ahead give us more roads to wander, more reasons to laugh, and many more pictures we almost forget to take.",
+        "One of our first pictures is literally you helping put me in a dress, so this friendship was never gonna be normal.",
+        "Then you turned 18 or smth, made me watch The Great, and somehow made eating fries look like a whole event.",
+        "I got you into Leprous, you taught me to color, and we kept choosing cute over comfortable for no good reason.",
+        "We got launched around in bubble suits, got way too drunk in costumes, and nearly made badminton a contact sport.",
+        "I still can't believe we drove 40 minutes for coffee, but yeah I'd obviously do it again.",
+        "Thanks for being down for anything, even when the plan is pretending to read in a library or stopping every five minutes on some rocks.",
+        "Somewhere between Luna's apartment getting shot up, you falling in love with Faith, and me keeping you unmoshed, we became really close frens.",
+        "Happy birthday Jane, love you lots, and pls never become normal <3",
     ],
 
     /* ── The timeline ─────────────────────────────────────── */
