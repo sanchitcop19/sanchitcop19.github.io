@@ -24,6 +24,19 @@ window.BIRTHDAY = {
 
     subtitle: "Every now and again I meet someone and it's like I've known them forever <3",
 
+    /* ── A poem before the timeline ───────────────────────── */
+
+    poem: [
+        "We began wrapped in pink and silver, laughing like old friends before we had the years to prove it.",
+        "Since then, your smile has kept finding the light—in birthday rooms, under concert glow, and across crowded tables.",
+        "We have worn costumes, chased shuttlecocks, sent each other flying, and called every ridiculous detour a good idea.",
+        "We have shared fries, books, coffee, loud music, and the quiet gift of simply showing up.",
+        "Some memories arrive dressed for a party, while others are just a tired pause on sun-warmed stone.",
+        "You make both kinds brighter, because even ordinary hours become stories beside you.",
+        "These photographs hold sixteen moments, but what they really frame is the steady miracle of being known and still being chosen.",
+        "Happy birthday, Jane; may the years ahead give us more roads to wander, more reasons to laugh, and many more pictures we almost forget to take.",
+    ],
+
     /* ── The timeline ─────────────────────────────────────── */
     /* Oldest first. They alternate left/right automatically. */
 

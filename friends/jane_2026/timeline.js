@@ -30,6 +30,80 @@
   setText("hero-note", DATA.note);
   document.title = isPlaceholder ? "Happy Birthday" : "Happy Birthday, " + name;
 
+  /* ── Poem ──────────────────────────────────────────────── */
+
+  var poem = Array.isArray(DATA.poem) ? DATA.poem.filter(Boolean) : [];
+  var poemSection = $("poem");
+  var poemAccessible = $("poem-accessible");
+  var poemMeasure = $("poem-measure");
+  var poemTyped = $("poem-typed");
+
+  if (poem.length && poemSection && poemAccessible && poemMeasure && poemTyped) {
+    var fullPoem = poem.join("\n\n");
+    poemAccessible.textContent = poem.join(" ");
+    poemMeasure.textContent = fullPoem;
+
+    function showCompletePoem() {
+      poemTyped.textContent = fullPoem;
+      poemTyped.classList.remove("is-typing");
+      poemTyped.classList.add("is-complete");
+    }
+
+    function typePoem() {
+      if (poemTyped.classList.contains("is-typing") || poemTyped.classList.contains("is-complete")) return;
+
+      poemTyped.classList.add("is-typing");
+      var index = 0;
+      var characterTimes = [];
+      var elapsed = 0;
+
+      for (var i = 0; i < fullPoem.length; i += 1) {
+        characterTimes.push(elapsed);
+        var character = fullPoem.charAt(i);
+        elapsed += character === "." ? 260 : character === "\n" ? 120 : 12;
+      }
+
+      /* Wall-clock time lets the animation catch up after a background tab is
+         throttled instead of resuming one character at a time. */
+      var startedAt = Date.now();
+
+      function paintTypedCharacters() {
+        var timeSinceStart = Date.now() - startedAt;
+
+        while (index < fullPoem.length && characterTimes[index] <= timeSinceStart) {
+          index += 1;
+        }
+
+        poemTyped.textContent = fullPoem.slice(0, index);
+
+        if (index < fullPoem.length) {
+          var untilNextCharacter = Math.max(0, characterTimes[index] - timeSinceStart);
+          window.setTimeout(paintTypedCharacters, Math.min(32, untilNextCharacter));
+        } else {
+          poemTyped.classList.remove("is-typing");
+          poemTyped.classList.add("is-complete");
+        }
+      }
+
+      paintTypedCharacters();
+    }
+
+    if (reduced || !("IntersectionObserver" in window)) {
+      showCompletePoem();
+    } else {
+      var poemObserver = new IntersectionObserver(function (entries) {
+        if (entries.some(function (entry) { return entry.isIntersecting; })) {
+          typePoem();
+          poemObserver.disconnect();
+        }
+      }, { rootMargin: "0px 0px -18% 0px", threshold: 0.2 });
+
+      poemObserver.observe(poemSection);
+    }
+  } else if (poemSection) {
+    poemSection.hidden = true;
+  }
+
   var closing = DATA.closing || {};
   setText("closing-title", closing.title, "Happy Birthday");
   setText("closing-body", closing.body);

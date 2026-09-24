@@ -306,6 +306,99 @@ body {
 .scroll-cue:hover .cue-arrow,
 .scroll-cue:focus-visible .cue-arrow { opacity: 1; }
 
+/* ── Poem ─────────────────────────────────────────────────── */
+
+.poem {
+  position: relative;
+  z-index: 1;
+  min-height: 100svh;
+  display: grid;
+  place-items: center;
+  padding: 112px var(--gutter) 128px;
+  scroll-margin-top: 24px;
+}
+
+.poem[hidden] { display: none; }
+
+.poem::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 50%;
+  width: 1px;
+  height: 72px;
+  background: linear-gradient(180deg, transparent, var(--accent));
+  opacity: 0.55;
+}
+
+.poem-inner {
+  width: min(100%, 760px);
+  text-align: center;
+}
+
+.poem-label {
+  margin: 0 0 34px;
+  color: var(--accent);
+  font-size: 11px;
+  font-weight: 500;
+  letter-spacing: 0.24em;
+  text-transform: uppercase;
+}
+
+/* Screen readers receive the finished poem at once instead of hearing every
+   character announced as the visual typewriter runs. */
+.poem-accessible {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+.poem-stage {
+  position: relative;
+}
+
+.poem-copy {
+  margin: 0;
+  color: var(--text);
+  font-family: var(--serif);
+  font-size: clamp(1.28rem, 2.8vw, 1.72rem);
+  line-height: 1.62;
+  white-space: pre-line;
+  text-wrap: pretty;
+}
+
+.poem-measure { visibility: hidden; }
+
+.poem-typed {
+  position: absolute;
+  inset: 0;
+}
+
+.poem-typed::after {
+  content: "";
+  display: inline-block;
+  width: 1px;
+  height: 0.9em;
+  margin-left: 0.16em;
+  vertical-align: -0.06em;
+  background: var(--accent);
+  box-shadow: 0 0 10px var(--accent-glow);
+  opacity: 0;
+}
+
+.poem-typed.is-typing::after {
+  opacity: 1;
+  animation: caret-blink 760ms steps(1, end) infinite;
+}
+
+@keyframes caret-blink { 50% { opacity: 0; } }
+
 /* ── Timeline ───────────────────────────────────────────────── */
 
 .timeline-wrap {

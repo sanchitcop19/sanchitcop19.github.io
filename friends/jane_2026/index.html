@@ -38,8 +38,8 @@
     <div class="hero-rule" aria-hidden="true"></div>
     <p class="hero-note" id="hero-note"></p>
   </div>
-  <a class="scroll-cue" href="#timeline" aria-label="Scroll to the timeline">
-    <span class="cue-text">scroll for the timeline</span>
+  <a class="scroll-cue" href="#poem" aria-label="Scroll to the poem">
+    <span class="cue-text">scroll for the poem</span>
     <span class="cue-track" aria-hidden="true"></span>
     <svg class="cue-arrow" viewBox="0 0 24 24" aria-hidden="true" focusable="false">
       <path d="M12 4v14M6 13l6 6 6-6" />
@@ -49,6 +49,18 @@
 
 <!-- ─────────────────────────── TIMELINE ─────────────────────────── -->
 <main>
+  <!-- ──────────────────────────── POEM ──────────────────────────── -->
+  <section class="poem" id="poem" aria-label="A poem for Jane">
+    <div class="poem-inner">
+      <p class="poem-label">A note between the moments</p>
+      <p class="poem-accessible" id="poem-accessible"></p>
+      <div class="poem-stage">
+        <p class="poem-copy poem-measure" id="poem-measure" aria-hidden="true"></p>
+        <p class="poem-copy poem-typed" id="poem-typed" aria-hidden="true"></p>
+      </div>
+    </div>
+  </section>
+
   <section class="timeline-wrap" id="timeline" aria-label="Timeline of moments">
     <div class="spine" aria-hidden="true"><div class="spine-fill" id="spine-fill"></div></div>
     <ol class="timeline" id="timeline-list"></ol>
