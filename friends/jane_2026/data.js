@@ -27,14 +27,14 @@ window.BIRTHDAY = {
     /* ── A poem before the timeline ───────────────────────── */
 
     poem: [
-        "One of our first pictures is literally you helping put me in a dress, so this friendship was never gonna be normal.",
-        "Then you turned 18 or smth, made me watch The Great, and somehow made eating fries look like a whole event.",
-        "I got you into Leprous, you taught me to color, and we kept choosing cute over comfortable for no good reason.",
-        "We got launched around in bubble suits, got way too drunk in costumes, and nearly made badminton a contact sport.",
-        "I still can't believe we drove 40 minutes for coffee, but yeah I'd obviously do it again.",
-        "Thanks for being down for anything, even when the plan is pretending to read in a library or stopping every five minutes on some rocks.",
-        "Somewhere between Luna's apartment getting shot up, you falling in love with Faith, and me keeping you unmoshed, we became really close frens.",
-        "Happy birthday Jane, love you lots, and pls never become normal <3",
+        "How much you care for everyone,",
+        "And how you make even the dumbest plans fun.",
+        "That one time we downed two bottles of wine,",
+        "Then woke up the next morning saying we felt totally fine.",
+        "Our lord and savior Jane Han,",
+        "Stopping every five minutes was obviously part of the plan.",
+        "No one in their right minds would karaoke Leprous with me,",
+        "But you did anyway, and we were both wildly off-key.",
     ],
 
     /* ── The timeline ─────────────────────────────────────── */
