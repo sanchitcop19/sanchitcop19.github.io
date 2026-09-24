@@ -27,13 +27,13 @@ window.BIRTHDAY = {
     /* ── A poem before the timeline ───────────────────────── */
 
     poem: [
-        "You care for everyone, then roast them with a grin,",
-        "Being loved and bullied by you is honestly a win.",
+        "You came into my life when I needed you most,",
+        "Constant affirmation and the occasional roast.",
         "That one time we downed two bottles of wine,",
         "I woke up far from fine, to painful sunshine.",
-        "No one in their right mind would karaoke Leprous with me,",
-        "But you did, and we were delightfully off-key.",
-        "Goes to church, but is devil spawn,",
+        "No one in their right minds would karaoke Leprous with me,",
+        "But you did, and we were delightfully off key.",
+        "Goes to church but is devil spawn,",
         "Our lord and savior Jane Han.",
     ],
 
