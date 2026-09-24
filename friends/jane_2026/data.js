@@ -27,14 +27,14 @@ window.BIRTHDAY = {
     /* ── A poem before the timeline ───────────────────────── */
 
     poem: [
-        "How much you care for everyone,",
-        "And how you make even the dumbest plans fun.",
+        "You care for everyone, then roast them with a grin,",
+        "Being loved and bullied by you is honestly a win.",
         "That one time we downed two bottles of wine,",
-        "Then woke up the next morning saying we felt totally fine.",
-        "Our lord and savior Jane Han,",
-        "Stopping every five minutes was obviously part of the plan.",
-        "No one in their right minds would karaoke Leprous with me,",
-        "But you did anyway, and we were both wildly off-key.",
+        "I woke up far from fine, to painful sunshine.",
+        "No one in their right mind would karaoke Leprous with me,",
+        "But you did, and we were delightfully off-key.",
+        "Goes to church, but is devil spawn,",
+        "Our lord and savior Jane Han.",
     ],
 
     /* ── The timeline ─────────────────────────────────────── */
