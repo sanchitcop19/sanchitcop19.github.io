@@ -60,7 +60,7 @@
       for (var i = 0; i < fullPoem.length; i += 1) {
         characterTimes.push(elapsed);
         var character = fullPoem.charAt(i);
-        elapsed += character === "." ? 260 : character === "\n" ? 120 : 12;
+        elapsed += character === "." ? 400 : character === "\n" ? 180 : 24;
       }
 
       /* Wall-clock time lets the animation catch up after a background tab is
