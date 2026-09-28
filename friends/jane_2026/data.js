@@ -22,8 +22,6 @@ window.BIRTHDAY = {
 
     eyebrow: "Happy Birthday",
 
-    subtitle: "Every now and again I meet someone and it's like I've known them forever <3",
-
     /* ── A poem before the timeline ───────────────────────── */
 
     poem: [
