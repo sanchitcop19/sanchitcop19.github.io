@@ -69,7 +69,7 @@ window.BIRTHDAY = {
             date: "July 2026",
             title: "Because driving 40 min to get coffee is what sane people do",
         },
-        { photo: "photos/2026-08-concert.jpg", date: "August 2026", title: "The day I saved you from getting moshed" },
+        { photo: "photos/2026-08-concert.jpg", date: "August 2026", title: "The day I saved your clueless ass from getting moshed" },
         { photo: "photos/2026-09-rocks.jpg", date: "September 2026", title: "The day you took way too many breaks" },
     ],
 
