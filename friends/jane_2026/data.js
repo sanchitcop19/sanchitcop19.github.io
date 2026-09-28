@@ -76,7 +76,7 @@ window.BIRTHDAY = {
     /* ── The closing note ─────────────────────────────────── */
 
     closing: {
-        title: "Love you 🫶",
+        title: "Love you, and I gotchu always 🫶",
         signoff: "— Sanchit",
     },
 };
