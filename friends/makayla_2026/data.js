@@ -23,7 +23,15 @@ window.BIRTHDAY = {
     /* ── The timeline ─────────────────────────────────────── */
     /* Oldest first. They alternate left/right automatically. */
 
-    moments: [],
+    moments: [
+        { photo: "photos/dsc01638-enhanced-nr-copy.jpg", date: "June 2024" },
+        { photo: "photos/pxl-20240818-052119013-mp.jpg", date: "August 2024" },
+        { photo: "photos/img-4747.jpg", date: "February 2025" },
+        { photo: "photos/img-5362.jpg", date: "June 2025" },
+        { photo: "photos/img-3941.jpg", date: "June 2026" },
+        { photo: "photos/img-2615.png" },
+        { photo: "photos/img-4144.jpg" },
+    ],
 
     /* ── The closing note ─────────────────────────────────── */
 
