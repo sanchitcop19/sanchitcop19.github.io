@@ -1,0 +1,114 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Caption editor</title>
+<style>
+  :root { --bg:#0b0f0e; --card:#141a19; --line:#26302e; --text:#e8eeec; --mute:#8a9a96; --accent:#6ee7b7; }
+  * { box-sizing: border-box; }
+  body { margin:0; background:var(--bg); color:var(--text); font:15px/1.4 system-ui,sans-serif; padding-bottom:90px; }
+  header { padding:20px 16px 8px; max-width:760px; margin:auto; }
+  h1 { margin:0; font-size:20px; }
+  p.hint { color:var(--mute); margin:4px 0 0; }
+  main { max-width:760px; margin:auto; padding:8px 16px; display:grid; gap:12px; }
+  .card { display:grid; grid-template-columns:120px 1fr auto; gap:12px; background:var(--card); border:1px solid var(--line); border-radius:12px; padding:12px; }
+  .card img { width:120px; height:120px; object-fit:cover; border-radius:8px; background:#000; }
+  .fields { display:grid; gap:8px; min-width:0; }
+  input { width:100%; background:#0b0f0e; color:var(--text); border:1px solid var(--line); border-radius:8px; padding:8px 10px; font:inherit; }
+  input:focus { outline:2px solid var(--accent); border-color:transparent; }
+  .row { display:grid; grid-template-columns:150px 1fr; gap:8px; }
+  .tools { display:flex; flex-direction:column; gap:6px; }
+  button { background:#1d2625; color:var(--text); border:1px solid var(--line); border-radius:8px; padding:6px 10px; font:inherit; cursor:pointer; }
+  button:hover { border-color:var(--accent); }
+  button.primary { background:var(--accent); color:#04130c; border-color:var(--accent); font-weight:600; }
+  h2 { font-size:14px; color:var(--mute); font-weight:500; margin:16px 0 0; }
+  .unlisted { display:flex; flex-wrap:wrap; gap:8px; }
+  .unlisted button { display:flex; gap:8px; align-items:center; }
+  .unlisted img { width:40px; height:40px; object-fit:cover; border-radius:6px; }
+  footer { position:fixed; inset:auto 0 0 0; background:rgba(11,15,14,.95); border-top:1px solid var(--line); padding:12px 16px; display:flex; gap:8px; align-items:center; justify-content:center; }
+  #msg { color:var(--mute); min-width:160px; }
+  #msg.err { color:#fca5a5; }
+  @media (max-width:560px) { .card { grid-template-columns:80px 1fr; } .card img { width:80px; height:80px; } .tools { flex-direction:row; grid-column:1/-1; } .row { grid-template-columns:1fr; } }
+</style>
+</head>
+<body>
+<header>
+  <h1 id="title">Caption editor</h1>
+  <p class="hint">Edit dates, titles and captions, then Save. Publish commits and pushes so it goes live.</p>
+</header>
+<main id="list"></main>
+<main><h2 id="ul-h" hidden>Photos not on the page yet</h2><div class="unlisted" id="unlisted"></div></main>
+<footer>
+  <span id="msg"></span>
+  <button id="save">Save</button>
+  <button id="publish" class="primary">Save &amp; publish</button>
+</footer>
+<script>
+const TOKEN = "__TOKEN__";
+let moments = [], unlisted = [];
+const $ = (id) => document.getElementById(id);
+const msg = (t, err) => { $("msg").textContent = t; $("msg").className = err ? "err" : ""; };
+const src = (p) => "/photo/" + encodeURIComponent(p.split("/").pop());
+
+function render() {
+  const list = $("list");
+  list.textContent = "";
+  moments.forEach((m, i) => {
+    const card = document.createElement("div");
+    card.className = "card";
+    const img = document.createElement("img");
+    img.src = src(m.photo); img.alt = ""; img.loading = "lazy";
+    const f = document.createElement("div"); f.className = "fields";
+    const row = document.createElement("div"); row.className = "row";
+    const mk = (key, ph) => {
+      const el = document.createElement("input");
+      el.placeholder = ph; el.value = m[key] || "";
+      el.addEventListener("input", () => { m[key] = el.value; });
+      return el;
+    };
+    row.append(mk("date", "Date, e.g. June 2026"), mk("title", "Title"));
+    f.append(row, mk("caption", "Caption (optional)"));
+    const tools = document.createElement("div"); tools.className = "tools";
+    const b = (label, fn, dis) => { const x = document.createElement("button"); x.textContent = label; x.disabled = !!dis; x.onclick = fn; return x; };
+    tools.append(
+      b("↑", () => move(i, -1), i === 0),
+      b("↓", () => move(i, 1), i === moments.length - 1),
+      b("Remove", () => { unlisted.push(m.photo.split("/").pop()); moments.splice(i, 1); render(); })
+    );
+    card.append(img, f, tools);
+    list.append(card);
+  });
+  const ul = $("unlisted");
+  ul.textContent = "";
+  $("ul-h").hidden = !unlisted.length;
+  unlisted.forEach((file, i) => {
+    const x = document.createElement("button");
+    const im = document.createElement("img"); im.src = src(file); im.alt = "";
+    x.append(im, document.createTextNode("Add " + file));
+    x.onclick = () => { moments.push({ photo: "photos/" + file }); unlisted.splice(i, 1); render(); };
+    ul.append(x);
+  });
+}
+function move(i, d) { const j = i + d; [moments[i], moments[j]] = [moments[j], moments[i]]; render(); }
+
+async function send(path) {
+  msg("Working…");
+  try {
+    const r = await fetch(path, { method: "POST", headers: { "Content-Type": "application/json", "X-Token": TOKEN }, body: JSON.stringify({ moments }) });
+    const j = await r.json();
+    if (!r.ok) throw new Error(j.error);
+    msg(j.message);
+  } catch (e) { msg(e.message, true); }
+}
+$("save").onclick = () => send("/api/save");
+$("publish").onclick = () => send("/api/publish");
+
+fetch("/api/data").then((r) => r.json()).then((d) => {
+  moments = d.moments; unlisted = d.unlisted;
+  $("title").textContent = "Captions for " + d.name;
+  render();
+});
+</script>
+</body>
+</html>
