@@ -40,6 +40,13 @@ window.BIRTHDAY = {
         { photo: "photos/birthday-cake.jpg" },
         { photo: "photos/skeleton-bar.jpg" },
         { photo: "photos/half-marathon-portraits.jpg" },
+        { photo: "photos/dsc05407.jpg", date: "October 2022" },
+        { photo: "photos/c0bc602d-2fa9-4b7a-8605-8c5cb44f8e44.jpg", date: "September 2026" },
+        { photo: "photos/received-781012686403574.jpg" },
+        { photo: "photos/8c1b5d89-5522-4c39-92b1-68e5ca238488.jpg" },
+        { photo: "photos/02eb126c35f0ceb5836d7138a52f66e8.jpg" },
+        { photo: "photos/23601e373e36da4f29e312667a3669ac.jpg" },
+        { photo: "photos/7472417e13f174d5f20be329545bae56.jpg" },
     ],
 
     /* ── The closing note ─────────────────────────────────── */
