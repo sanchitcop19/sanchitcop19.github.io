@@ -36,7 +36,7 @@ window.BIRTHDAY = {
     /* ── The closing note ─────────────────────────────────── */
 
     closing: {
-        title: "Happy Birthday",
+        title: "Happy Birthday ♥",
         signoff: "— Sanchit",
     },
 };
