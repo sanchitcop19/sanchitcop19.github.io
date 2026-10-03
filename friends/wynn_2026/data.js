@@ -14,7 +14,7 @@
 window.BIRTHDAY = {
     /* ── Hero ─────────────────────────────────────────────── */
 
-    name: "Wynn",
+    name: "Ms. Wynn Pho",
 
     eyebrow: "Happy Birthday",
 
