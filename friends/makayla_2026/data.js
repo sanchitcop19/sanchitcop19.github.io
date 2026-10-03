@@ -31,7 +31,7 @@ window.BIRTHDAY = {
         { photo: "photos/img-3941.jpg", date: "June 2026", title: "The one where our minds melded" },
         { photo: "photos/bartender-knows-my-name.jpg", date: "June 2026", title: "The one where we got really wet" },
         { photo: "photos/img-2615.png", title: "The one where you defied all odds" },
-        { photo: "photos/img-4144.jpg", title: "The one where we yapped" },
+        { photo: "photos/img-4144.jpg", date: "July 2026", title: "The one where we yapped" },
     ],
 
     /* ── The closing note ─────────────────────────────────── */
