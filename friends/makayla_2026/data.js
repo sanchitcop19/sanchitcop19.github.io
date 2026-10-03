@@ -16,7 +16,7 @@ window.BIRTHDAY = {
 
     name: "Ms. Makayla Chen",
 
-    eyebrow: "Happy Birthday",
+    eyebrow: "Happy Birthday ♥",
 
     subtitle: "",
 
