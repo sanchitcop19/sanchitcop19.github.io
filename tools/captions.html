@@ -21,8 +21,9 @@
   input:focus, select:focus { outline:2px solid var(--accent); border-color:transparent; }
   .row { display:grid; grid-template-columns:150px 1fr; gap:8px; }
   .tools { display:flex; flex-direction:column; gap:6px; }
-  button { background:#1d2625; color:var(--text); border:1px solid var(--line); border-radius:8px; padding:6px 10px; font:inherit; cursor:pointer; }
-  button:hover { border-color:var(--accent); }
+  button, .btn { background:#1d2625; color:var(--text); border:1px solid var(--line); border-radius:8px; padding:6px 10px; font:inherit; cursor:pointer; white-space:nowrap; display:inline-flex; align-items:center; }
+  button:hover, .btn:hover { border-color:var(--accent); }
+  .btn.busy { opacity:.4; pointer-events:none; }
   button:disabled { opacity:.4; }
   button.primary { background:var(--accent); color:#04130c; border-color:var(--accent); font-weight:600; }
   h2 { font-size:14px; color:var(--mute); font-weight:500; margin:16px 0 0; }
@@ -40,7 +41,7 @@
 <body>
 <header>
   <h1 id="title">Caption editor</h1>
-  <p class="hint">Edit dates, titles and captions, then Publish. It commits to GitHub and the page updates in a minute or two.</p>
+  <p class="hint">Edit dates, titles and captions, then Publish. Upload photos adds new ones straight away and skips any that are already here. The page updates a minute or two after either.</p>
 </header>
 
 <section id="login" hidden>
@@ -54,12 +55,14 @@
 <section id="pick" hidden>
   <div class="bar">
     <select id="folder"></select>
+    <label class="btn" id="upload-btn">Upload photos<input id="upload" type="file" accept="image/*" multiple hidden /></label>
     <button id="signout">Sign out</button>
   </div>
 </section>
 
 <main id="list"></main>
 <section><h2 id="ul-h" hidden>Photos not on the page yet</h2><div class="unlisted" id="unlisted"></div></section>
+<section><h2 id="dup-h" hidden>Skipped as duplicates of a photo already here</h2><div class="unlisted" id="dups"></div></section>
 
 <footer>
   <span id="msg"></span>
@@ -69,10 +72,12 @@
 <script>
 const REPO = "sanchitcop19/sanchitcop19.github.io";
 const BRANCH = "master";
-const API = "https://api.github.com/repos/" + REPO + "/contents/";
+const API = "https://api.github.com/repos/" + REPO + "/";
 const KEY = "caption-editor-token";
 
 let token = "", folder = "", sha = "", source = "", moments = [], unlisted = [];
+let hashes = null, dups = [], files = [];
+const fresh = {};  // photo file name -> object URL, for uploads the live site hasn't deployed yet
 const $ = (id) => document.getElementById(id);
 const msg = (t, err) => { $("msg").textContent = t; $("msg").className = err ? "err" : ""; };
 const store = (fn) => { try { return fn(); } catch (e) { return null; } };
@@ -98,7 +103,7 @@ function encode(text) {
 }
 
 const IMG = /\.(jpe?g|png|webp|gif)$/i;
-const src = (p) => "/friends/" + folder + "/photos/" + encodeURIComponent(p.split("/").pop());
+const src = (p) => { const f = p.split("/").pop(); return fresh[f] || "/friends/" + folder + "/photos/" + encodeURIComponent(f); };
 
 function render() {
   const list = $("list");
@@ -159,9 +164,10 @@ function rewrite() {
 async function load() {
   $("publish").disabled = true;
   $("list").textContent = ""; $("unlisted").textContent = ""; $("ul-h").hidden = true;
+  hashes = null; dups = []; renderDups();
   msg("Loading…");
   try {
-    const file = await gh("friends/" + folder + "/data.js?ref=" + BRANCH);
+    const file = await gh("contents/friends/" + folder + "/data.js?ref=" + BRANCH);
     sha = file.sha;
     source = decode(file.content);
     if (!MOMENTS.test(source)) throw new Error("Couldn't find the moments list in data.js.");
@@ -170,8 +176,9 @@ async function load() {
     const data = win.BIRTHDAY || {};
     moments = (data.moments || []).map((m) => ({ photo: m.photo, date: m.date, title: m.title, caption: m.caption }));
     const used = new Set(moments.map((m) => (m.photo || "").split("/").pop()));
-    const photos = await gh("friends/" + folder + "/photos?ref=" + BRANCH).catch(() => []);
-    unlisted = photos.map((p) => p.name).filter((n) => IMG.test(n) && !used.has(n)).sort();
+    const photos = await gh("contents/friends/" + folder + "/photos?ref=" + BRANCH).catch(() => []);
+    files = photos.map((p) => p.name).filter((n) => IMG.test(n));
+    unlisted = files.filter((n) => !used.has(n)).sort();
     $("title").textContent = "Captions for " + (data.name || folder);
     render();
     $("publish").disabled = false;
@@ -183,7 +190,7 @@ async function publish() {
   $("publish").disabled = true;
   msg("Publishing…");
   try {
-    const out = await gh("friends/" + folder + "/data.js", {
+    const out = await gh("contents/friends/" + folder + "/data.js", {
       method: "PUT",
       body: JSON.stringify({ message: "feat: update " + folder + " captions", content: encode(rewrite()), sha, branch: BRANCH }),
     });
@@ -194,10 +201,208 @@ async function publish() {
   $("publish").disabled = false;
 }
 
+/* ── Upload ─────────────────────────────────────────────────
+   Each photo is decoded, shrunk to 1800px on the long edge and
+   fingerprinted with a 64-bit difference hash. A photo whose hash
+   is within a few bits of one already in photos/ (or earlier in
+   the same batch) is a duplicate, even if it was re-saved, resized
+   or renamed. Everything else goes up in a single commit together
+   with the updated data.js. */
+
+const MAX_EDGE = 1800, NEAR = 6;
+
+async function raw(path, ref) {
+  const r = await fetch(API + "contents/" + path + "?ref=" + ref, {
+    cache: "no-store",
+    headers: { Authorization: "Bearer " + token, Accept: "application/vnd.github.raw+json" },
+  });
+  if (!r.ok) throw new Error("Couldn't read " + path);
+  return r.blob();
+}
+
+function dhash(bmp) {
+  const c = document.createElement("canvas"); c.width = 9; c.height = 8;
+  const x = c.getContext("2d", { willReadFrequently: true });
+  x.fillStyle = "#000"; x.fillRect(0, 0, 9, 8);
+  x.drawImage(bmp, 0, 0, 9, 8);
+  const d = x.getImageData(0, 0, 9, 8).data, g = [];
+  for (let i = 0; i < 72; i++) g.push(d[i * 4] * 299 + d[i * 4 + 1] * 587 + d[i * 4 + 2] * 114);
+  let h = "";
+  for (let y = 0; y < 8; y++) for (let k = 0; k < 8; k++) h += g[y * 9 + k] > g[y * 9 + k + 1] ? "1" : "0";
+  return h;
+}
+const dist = (a, b) => { let n = 0; for (let i = 0; i < 64; i++) if (a[i] !== b[i]) n++; return n; };
+const match = (h, list) => list.find((e) => dist(h, e.hash) <= NEAR);
+
+async function existingHashes() {
+  if (hashes) return hashes;
+  hashes = [];
+  for (let i = 0; i < files.length; i++) {
+    msg("Checking photos already here " + (i + 1) + "/" + files.length + "…");
+    try {
+      const bmp = await createImageBitmap(await raw("friends/" + folder + "/photos/" + files[i], BRANCH));
+      hashes.push({ name: files[i], hash: dhash(bmp) });
+      bmp.close();
+    } catch (e) { /* unreadable file: nothing to compare against */ }
+  }
+  return hashes;
+}
+
+// { date: "June 2024", time } from a JPEG's EXIF capture date, or {} when there isn't one.
+async function exifDate(file) {
+  try {
+    const v = new DataView(await file.slice(0, 256 * 1024).arrayBuffer());
+    if (v.getUint16(0) !== 0xffd8) return {};
+    let p = 2;
+    while (p + 4 < v.byteLength) {
+      const mark = v.getUint16(p), len = v.getUint16(p + 2);
+      if (mark === 0xffe1 && v.getUint32(p + 4) === 0x45786966) {
+        const t = p + 10, le = v.getUint16(t) === 0x4949;
+        const u16 = (o) => v.getUint16(t + o, le), u32 = (o) => v.getUint32(t + o, le);
+        const tag = (ifd, want) => {
+          const n = u16(ifd);
+          for (let i = 0; i < n; i++) { const e = ifd + 2 + i * 12; if (u16(e) === want) return e; }
+          return -1;
+        };
+        const str = (e) => { let o = u32(e + 8), s = ""; for (let i = 0; i < 19; i++) s += String.fromCharCode(v.getUint8(t + o + i)); return s; };
+        const ifd0 = u32(4), ptr = tag(ifd0, 0x8769);
+        let e = ptr >= 0 ? tag(u32(ptr + 8), 0x9003) : -1;
+        if (e < 0) e = tag(ifd0, 0x0132);
+        const m = e >= 0 && /^(\d{4}):(\d{2})/.exec(str(e));
+        if (!m || m[1] === "0000") return {};
+        const d = new Date(+m[1], +m[2] - 1, 1);
+        return { date: d.toLocaleString("en-US", { month: "long", year: "numeric" }), time: d.getTime() };
+      }
+      if ((mark & 0xff00) !== 0xff00) return {};
+      p += 2 + len;
+    }
+  } catch (e) { /* not a JPEG with EXIF */ }
+  return {};
+}
+
+function cleanName(name, ext, taken) {
+  let stem = name.replace(/\.[^.]*$/, "").toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, "") || "photo";
+  let out = stem + "." + ext, n = 2;
+  while (taken.has(out)) out = stem + "-" + n++ + "." + ext;
+  taken.add(out);
+  return out;
+}
+
+function hasAlpha(c) {
+  const d = c.getContext("2d").getImageData(0, 0, c.width, c.height).data;
+  for (let i = 3; i < d.length; i += 4 * 97) if (d[i] < 250) return true;
+  return false;
+}
+
+async function prepare(file) {
+  const bmp = await createImageBitmap(file, { imageOrientation: "from-image" });
+  const scale = Math.min(1, MAX_EDGE / Math.max(bmp.width, bmp.height));
+  const c = document.createElement("canvas");
+  c.width = Math.round(bmp.width * scale); c.height = Math.round(bmp.height * scale);
+  c.getContext("2d", { willReadFrequently: true }).drawImage(bmp, 0, 0, c.width, c.height);
+  const hash = dhash(bmp);
+  bmp.close();
+  const png = file.type === "image/png" && hasAlpha(c);
+  const blob = await new Promise((ok) => c.toBlob(ok, png ? "image/png" : "image/jpeg", 0.82));
+  return { blob, hash, ext: png ? "png" : "jpg", original: file.name, ...(await exifDate(file)) };
+}
+
+const b64 = (blob) => new Promise((ok, bad) => {
+  const r = new FileReader();
+  r.onload = () => ok(r.result.slice(r.result.indexOf(",") + 1));
+  r.onerror = () => bad(r.error);
+  r.readAsDataURL(blob);
+});
+
+// Adds the photos to moments and commits them plus data.js in one go.
+async function commitPhotos(items) {
+  const head = await gh("git/ref/heads/" + BRANCH);
+  const base = head.object.sha;
+  const current = await gh("contents/friends/" + folder + "/data.js?ref=" + base);
+  if (current.sha !== sha) throw new Error("data.js changed on GitHub since you opened it. Reload, then upload again.");
+  const taken = new Set(files);
+  const entries = [];
+  for (let i = 0; i < items.length; i++) {
+    msg("Uploading " + (i + 1) + "/" + items.length + "…");
+    const it = items[i];
+    it.name = cleanName(it.original, it.ext, taken);
+    const blob = await gh("git/blobs", { method: "POST", body: JSON.stringify({ content: await b64(it.blob), encoding: "base64" }) });
+    entries.push({ path: "friends/" + folder + "/photos/" + it.name, mode: "100644", type: "blob", sha: blob.sha });
+  }
+  const before = moments.slice();
+  items.forEach((it) => moments.push(it.date ? { photo: "photos/" + it.name, date: it.date } : { photo: "photos/" + it.name }));
+  try {
+    msg("Saving…");
+    entries.push({ path: "friends/" + folder + "/data.js", mode: "100644", type: "blob", content: rewrite() });
+    const baseCommit = await gh("git/commits/" + base);
+    const tree = await gh("git/trees", { method: "POST", body: JSON.stringify({ base_tree: baseCommit.tree.sha, tree: entries }) });
+    const n = items.length;
+    const commit = await gh("git/commits", { method: "POST", body: JSON.stringify({
+      message: "feat: add " + n + " " + folder + " photo" + (n === 1 ? "" : "s"), tree: tree.sha, parents: [base] }) });
+    await gh("git/refs/heads/" + BRANCH, { method: "PATCH", body: JSON.stringify({ sha: commit.sha }) });
+    source = rewrite();
+    sha = (await gh("contents/friends/" + folder + "/data.js?ref=" + commit.sha)).sha;
+  } catch (e) {
+    moments = before;
+    throw e;
+  }
+  items.forEach((it) => {
+    fresh[it.name] = URL.createObjectURL(it.blob);
+    files.push(it.name);
+    if (hashes) hashes.push({ name: it.name, hash: it.hash });
+  });
+  render();
+}
+
+async function upload(picked) {
+  $("upload-btn").classList.add("busy"); $("publish").disabled = true;
+  try {
+    const known = await existingHashes();
+    const keep = [], failed = [];
+    let skipped = 0;
+    for (let i = 0; i < picked.length; i++) {
+      msg("Preparing " + (i + 1) + "/" + picked.length + "…");
+      let it;
+      try { it = await prepare(picked[i]); } catch (e) { failed.push(picked[i].name); continue; }
+      const same = match(it.hash, known) || match(it.hash, keep);
+      if (same) { it.of = same.name || same.original; dups.push(it); skipped++; continue; }
+      keep.push(it);
+    }
+    // Dated photos oldest first, then undated ones in the order they were picked.
+    const dated = keep.filter((it) => it.time).sort((a, b) => a.time - b.time);
+    keep.splice(0, keep.length, ...dated, ...keep.filter((it) => !it.time));
+    if (keep.length) await commitPhotos(keep);
+    renderDups();
+    const parts = [keep.length + " added"];
+    if (skipped) parts.push(skipped + " duplicate" + (skipped === 1 ? "" : "s") + " skipped");
+    if (failed.length) parts.push("couldn't read " + failed.join(", ") + " (HEIC? try sharing as JPEG)");
+    msg(parts.join(", ") + ".", failed.length > 0);
+  } catch (e) { msg(e.message, true); }
+  $("upload-btn").classList.remove("busy"); $("publish").disabled = false;
+}
+
+function renderDups() {
+  const box = $("dups");
+  box.textContent = "";
+  $("dup-h").hidden = !dups.length;
+  dups.forEach((it, i) => {
+    const x = document.createElement("button");
+    const im = document.createElement("img"); im.src = URL.createObjectURL(it.blob); im.alt = "";
+    x.append(im, document.createTextNode(it.original + " ≈ " + it.of + " · upload anyway"));
+    x.onclick = async () => {
+      $("upload-btn").classList.add("busy");
+      try { await commitPhotos([it]); dups.splice(i, 1); renderDups(); msg("Added " + it.name + "."); }
+      catch (e) { msg(e.message, true); }
+      $("upload-btn").classList.remove("busy");
+    };
+    box.append(x);
+  });
+}
+
 async function start() {
   $("login").hidden = true;
   try {
-    const dirs = (await gh("friends?ref=" + BRANCH)).filter((d) => d.type === "dir").map((d) => d.name);
+    const dirs = (await gh("contents/friends?ref=" + BRANCH)).filter((d) => d.type === "dir").map((d) => d.name);
     if (!dirs.length) throw new Error("No folders found in friends/.");
     const sel = $("folder");
     sel.textContent = "";
@@ -231,6 +436,7 @@ $("folder").onchange = (e) => {
   load();
 };
 $("publish").onclick = publish;
+$("upload").onchange = (e) => { const picked = [...e.target.files]; e.target.value = ""; if (picked.length) upload(picked); };
 
 token = store(() => localStorage.getItem(KEY)) || "";
 if (token) start(); else $("login").hidden = false;
