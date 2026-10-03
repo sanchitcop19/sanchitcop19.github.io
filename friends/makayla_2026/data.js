@@ -29,6 +29,7 @@ window.BIRTHDAY = {
         { photo: "photos/img-4747.jpg", date: "February 2025", title: "The day we all got really wet (again)" },
         { photo: "photos/img-5362.jpg", date: "June 2025", title: "The one where we got wet, this time through sweat" },
         { photo: "photos/img-3941.jpg", date: "June 2026", title: "The one where our minds melded" },
+        { photo: "photos/bartender-knows-my-name.jpg", date: "June 2026", title: "The one where we got really wet" },
         { photo: "photos/img-2615.png", title: "The one where you defied all odds" },
         { photo: "photos/img-4144.jpg", title: "The one where we yapped" },
     ],
