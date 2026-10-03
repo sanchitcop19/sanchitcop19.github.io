@@ -1,0 +1,239 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<meta name="robots" content="noindex, nofollow" />
+<title>Caption editor</title>
+<style>
+  :root { --bg:#0b0f0e; --card:#141a19; --line:#26302e; --text:#e8eeec; --mute:#8a9a96; --accent:#6ee7b7; }
+  * { box-sizing: border-box; }
+  body { margin:0; background:var(--bg); color:var(--text); font:15px/1.4 system-ui,sans-serif; padding-bottom:90px; }
+  header { padding:20px 16px 8px; max-width:760px; margin:auto; }
+  h1 { margin:0; font-size:20px; }
+  p.hint { color:var(--mute); margin:4px 0 0; }
+  a { color:var(--accent); }
+  main, section { max-width:760px; margin:auto; padding:8px 16px; display:grid; gap:12px; }
+  .card { display:grid; grid-template-columns:120px 1fr auto; gap:12px; background:var(--card); border:1px solid var(--line); border-radius:12px; padding:12px; }
+  .card img { width:120px; height:120px; object-fit:cover; border-radius:8px; background:#000; }
+  .fields { display:grid; gap:8px; min-width:0; }
+  input, select { width:100%; background:#0b0f0e; color:var(--text); border:1px solid var(--line); border-radius:8px; padding:8px 10px; font:16px/1.3 system-ui,sans-serif; }
+  input:focus, select:focus { outline:2px solid var(--accent); border-color:transparent; }
+  .row { display:grid; grid-template-columns:150px 1fr; gap:8px; }
+  .tools { display:flex; flex-direction:column; gap:6px; }
+  button { background:#1d2625; color:var(--text); border:1px solid var(--line); border-radius:8px; padding:6px 10px; font:inherit; cursor:pointer; }
+  button:hover { border-color:var(--accent); }
+  button:disabled { opacity:.4; }
+  button.primary { background:var(--accent); color:#04130c; border-color:var(--accent); font-weight:600; }
+  h2 { font-size:14px; color:var(--mute); font-weight:500; margin:16px 0 0; }
+  .unlisted { display:flex; flex-wrap:wrap; gap:8px; }
+  .unlisted button { display:flex; gap:8px; align-items:center; }
+  .unlisted img { width:40px; height:40px; object-fit:cover; border-radius:6px; }
+  .bar { display:flex; gap:8px; }
+  footer { position:fixed; inset:auto 0 0 0; background:rgba(11,15,14,.95); border-top:1px solid var(--line); padding:12px 16px; display:flex; gap:8px; align-items:center; justify-content:center; }
+  #msg { color:var(--mute); }
+  #msg.err { color:#fca5a5; }
+  [hidden] { display:none !important; }
+  @media (max-width:560px) { .card { grid-template-columns:80px 1fr; } .card img { width:80px; height:80px; } .tools { flex-direction:row; grid-column:1/-1; } .row { grid-template-columns:1fr; } }
+</style>
+</head>
+<body>
+<header>
+  <h1 id="title">Caption editor</h1>
+  <p class="hint">Edit dates, titles and captions, then Publish. It commits to GitHub and the page updates in a minute or two.</p>
+</header>
+
+<section id="login" hidden>
+  <p class="hint">Paste a GitHub token to sign in. Make a
+    <a href="https://github.com/settings/personal-access-tokens/new" target="_blank" rel="noopener">fine-grained token</a>
+    with access to only this repository and <b>Contents: Read and write</b>. It stays in this browser.</p>
+  <input id="token" type="password" autocomplete="off" placeholder="github_pat_…" />
+  <button id="signin" class="primary">Sign in</button>
+</section>
+
+<section id="pick" hidden>
+  <div class="bar">
+    <select id="folder"></select>
+    <button id="signout">Sign out</button>
+  </div>
+</section>
+
+<main id="list"></main>
+<section><h2 id="ul-h" hidden>Photos not on the page yet</h2><div class="unlisted" id="unlisted"></div></section>
+
+<footer>
+  <span id="msg"></span>
+  <button id="publish" class="primary" disabled>Publish</button>
+</footer>
+
+<script>
+const REPO = "sanchitcop19/sanchitcop19.github.io";
+const BRANCH = "master";
+const API = "https://api.github.com/repos/" + REPO + "/contents/";
+const KEY = "caption-editor-token";
+
+let token = "", folder = "", sha = "", source = "", moments = [], unlisted = [];
+const $ = (id) => document.getElementById(id);
+const msg = (t, err) => { $("msg").textContent = t; $("msg").className = err ? "err" : ""; };
+const store = (fn) => { try { return fn(); } catch (e) { return null; } };
+
+async function gh(path, opts = {}) {
+  const r = await fetch(API + path, {
+    ...opts,
+    cache: "no-store",
+    headers: { Authorization: "Bearer " + token, Accept: "application/vnd.github+json", ...(opts.headers || {}) },
+  });
+  const j = await r.json().catch(() => ({}));
+  if (r.status === 401) throw new Error("Token rejected. Sign out and paste a new one.");
+  if (r.status === 409) throw new Error("Changed on GitHub since you opened it. Reload and redo your edits.");
+  if (!r.ok) throw new Error(j.message || "GitHub error " + r.status);
+  return j;
+}
+
+const decode = (b64) => new TextDecoder().decode(Uint8Array.from(atob(b64.replace(/\s/g, "")), (c) => c.charCodeAt(0)));
+function encode(text) {
+  let bin = "";
+  new TextEncoder().encode(text).forEach((b) => { bin += String.fromCharCode(b); });
+  return btoa(bin);
+}
+
+const IMG = /\.(jpe?g|png|webp|gif)$/i;
+const src = (p) => "/friends/" + folder + "/photos/" + encodeURIComponent(p.split("/").pop());
+
+function render() {
+  const list = $("list");
+  list.textContent = "";
+  moments.forEach((m, i) => {
+    const card = document.createElement("div");
+    card.className = "card";
+    const img = document.createElement("img");
+    img.src = src(m.photo); img.alt = ""; img.loading = "lazy";
+    const f = document.createElement("div"); f.className = "fields";
+    const row = document.createElement("div"); row.className = "row";
+    const mk = (key, ph) => {
+      const el = document.createElement("input");
+      el.placeholder = ph; el.value = m[key] || "";
+      el.addEventListener("input", () => { m[key] = el.value; });
+      return el;
+    };
+    row.append(mk("date", "Date, e.g. June 2026"), mk("title", "Title"));
+    f.append(row, mk("caption", "Caption (optional)"));
+    const tools = document.createElement("div"); tools.className = "tools";
+    const b = (label, fn, dis) => { const x = document.createElement("button"); x.textContent = label; x.disabled = !!dis; x.onclick = fn; return x; };
+    tools.append(
+      b("↑", () => move(i, -1), i === 0),
+      b("↓", () => move(i, 1), i === moments.length - 1),
+      b("Remove", () => { unlisted.push(m.photo.split("/").pop()); moments.splice(i, 1); render(); })
+    );
+    card.append(img, f, tools);
+    list.append(card);
+  });
+  const ul = $("unlisted");
+  ul.textContent = "";
+  $("ul-h").hidden = !unlisted.length;
+  unlisted.forEach((file, i) => {
+    const x = document.createElement("button");
+    const im = document.createElement("img"); im.src = src(file); im.alt = "";
+    x.append(im, document.createTextNode("Add " + file));
+    x.onclick = () => { moments.push({ photo: "photos/" + file }); unlisted.splice(i, 1); render(); };
+    ul.append(x);
+  });
+}
+function move(i, d) { const j = i + d; [moments[i], moments[j]] = [moments[j], moments[i]]; render(); }
+
+// Same rewrite as tools/caption-editor.js: only the moments list changes.
+const MOMENTS = /moments:\s*\[[\s\S]*?\n?\s*\],/;
+function rewrite() {
+  const lines = moments.map((m) => {
+    const parts = ["photo: " + JSON.stringify(m.photo)];
+    for (const k of ["date", "title", "caption"]) {
+      const v = (m[k] || "").trim();
+      if (v) parts.push(k + ": " + JSON.stringify(v));
+    }
+    return "        { " + parts.join(", ") + " },";
+  });
+  const block = lines.length ? "moments: [\n" + lines.join("\n") + "\n    ]," : "moments: [],";
+  return source.replace(MOMENTS, () => block);
+}
+
+async function load() {
+  $("publish").disabled = true;
+  $("list").textContent = ""; $("unlisted").textContent = ""; $("ul-h").hidden = true;
+  msg("Loading…");
+  try {
+    const file = await gh("friends/" + folder + "/data.js?ref=" + BRANCH);
+    sha = file.sha;
+    source = decode(file.content);
+    if (!MOMENTS.test(source)) throw new Error("Couldn't find the moments list in data.js.");
+    const win = {};
+    new Function("window", source)(win);
+    const data = win.BIRTHDAY || {};
+    moments = (data.moments || []).map((m) => ({ photo: m.photo, date: m.date, title: m.title, caption: m.caption }));
+    const used = new Set(moments.map((m) => (m.photo || "").split("/").pop()));
+    const photos = await gh("friends/" + folder + "/photos?ref=" + BRANCH).catch(() => []);
+    unlisted = photos.map((p) => p.name).filter((n) => IMG.test(n) && !used.has(n)).sort();
+    $("title").textContent = "Captions for " + (data.name || folder);
+    render();
+    $("publish").disabled = false;
+    msg(moments.length || unlisted.length ? "" : "No photos in this folder yet.");
+  } catch (e) { msg(e.message, true); }
+}
+
+async function publish() {
+  $("publish").disabled = true;
+  msg("Publishing…");
+  try {
+    const out = await gh("friends/" + folder + "/data.js", {
+      method: "PUT",
+      body: JSON.stringify({ message: "feat: update " + folder + " captions", content: encode(rewrite()), sha, branch: BRANCH }),
+    });
+    sha = out.content.sha;
+    source = rewrite();
+    msg("Published. Live in a minute or two.");
+  } catch (e) { msg(e.message, true); }
+  $("publish").disabled = false;
+}
+
+async function start() {
+  $("login").hidden = true;
+  try {
+    const dirs = (await gh("friends?ref=" + BRANCH)).filter((d) => d.type === "dir").map((d) => d.name);
+    if (!dirs.length) throw new Error("No folders found in friends/.");
+    const sel = $("folder");
+    sel.textContent = "";
+    dirs.forEach((d) => { const o = document.createElement("option"); o.value = o.textContent = d; sel.append(o); });
+    const want = new URLSearchParams(location.search).get("page") || store(() => localStorage.getItem(KEY + ":folder"));
+    folder = dirs.includes(want) ? want : dirs[0];
+    sel.value = folder;
+    $("pick").hidden = false;
+    await load();
+  } catch (e) {
+    msg(e.message, true);
+    $("login").hidden = false;
+  }
+}
+
+$("signin").onclick = () => {
+  token = $("token").value.trim();
+  if (!token) return;
+  store(() => localStorage.setItem(KEY, token));
+  $("token").value = "";
+  start();
+};
+$("signout").onclick = () => {
+  store(() => localStorage.removeItem(KEY));
+  token = "";
+  location.reload();
+};
+$("folder").onchange = (e) => {
+  folder = e.target.value;
+  store(() => localStorage.setItem(KEY + ":folder", folder));
+  load();
+};
+$("publish").onclick = publish;
+
+token = store(() => localStorage.getItem(KEY)) || "";
+if (token) start(); else $("login").hidden = false;
+</script>
+</body>
+</html>
