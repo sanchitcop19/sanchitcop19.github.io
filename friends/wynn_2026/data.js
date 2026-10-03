@@ -23,7 +23,24 @@ window.BIRTHDAY = {
     /* ── The timeline ─────────────────────────────────────── */
     /* Oldest first. They alternate left/right automatically. */
 
-    moments: [],
+    moments: [
+        { photo: "photos/waterfall-hike.jpg" },
+        { photo: "photos/lake-hike-group.jpg" },
+        { photo: "photos/rooftop-group.jpg" },
+        { photo: "photos/campsite-selfie.jpg" },
+        { photo: "photos/kitchen-party.jpg" },
+        { photo: "photos/car-window-sunset.jpg" },
+        { photo: "photos/beyond-wonderland.jpg" },
+        { photo: "photos/plane-nap.jpg" },
+        { photo: "photos/blue-bar.jpg" },
+        { photo: "photos/bereal-schnitzel.jpg" },
+        { photo: "photos/plane-nap-cutout.png" },
+        { photo: "photos/concert-selfie.jpg" },
+        { photo: "photos/crepes-brunch.jpg" },
+        { photo: "photos/birthday-cake.jpg" },
+        { photo: "photos/skeleton-bar.jpg" },
+        { photo: "photos/half-marathon-portraits.jpg" },
+    ],
 
     /* ── The closing note ─────────────────────────────────── */
 
