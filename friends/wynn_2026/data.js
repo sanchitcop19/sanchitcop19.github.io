@@ -37,13 +37,12 @@ window.BIRTHDAY = {
         { photo: "photos/plane-nap.jpg", date: "November 2024", title: "The day we were randomly assigned seats next to each other" },
         { photo: "photos/concert-selfie.jpg", date: "November 2024", title: "The day I saved you from getting moshed" },
         { photo: "photos/crepes-brunch.jpg", date: "March 2025", title: "That one time we ate uh idk" },
+        { photo: "photos/c0bc602d-2fa9-4b7a-8605-8c5cb44f8e44.jpg", date: "September 2025", title: "That one time we did a thing" },
         { photo: "photos/birthday-cake.jpg", date: "October 2025", title: "That one time you turned 28" },
-        { photo: "photos/half-marathon-portraits.jpg", date: "November 2025", title: "That one time you did a thing" },
+        { photo: "photos/half-marathon-portraits.jpg", date: "November 2025", title: "That one time only you did a thing" },
         { photo: "photos/7472417e13f174d5f20be329545bae56.jpg", date: "March 2026", title: "The day you got really mad at me" },
-        { photo: "photos/23601e373e36da4f29e312667a3669ac.jpg", date: "June 2026" },
-        { photo: "photos/02eb126c35f0ceb5836d7138a52f66e8.jpg", date: "June 2026" },
-        { photo: "photos/8c1b5d89-5522-4c39-92b1-68e5ca238488.jpg", date: "September 2026" },
-        { photo: "photos/c0bc602d-2fa9-4b7a-8605-8c5cb44f8e44.jpg", date: "September 2025" },
+        { photo: "photos/23601e373e36da4f29e312667a3669ac.jpg", date: "June 2026", title: "The day I needed my frens" },
+        { photo: "photos/8c1b5d89-5522-4c39-92b1-68e5ca238488.jpg", date: "September 2026", title: "That one time you played in 5/4" },
     ],
 
     /* ── The closing note ─────────────────────────────────── */
