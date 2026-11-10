@@ -1,0 +1,43 @@
+name: Sync resume from Google Doc
+
+on:
+  schedule:
+    - cron: "17 9 * * *"   # once a day, 09:17 UTC
+  workflow_dispatch:        # adds a "Run workflow" button for manual runs
+
+permissions:
+  contents: write
+
+jobs:
+  sync:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Download latest PDF
+        run: |
+          curl -sSfL -o new.pdf \
+            "https://docs.google.com/document/d/1FQjP2_n_GT541nysHJP0sxrzkBnL5Mc-RPyOTo1yDVY/export?format=pdf"
+
+      # Google produces a byte-different PDF on every export, so compare the
+      # extracted text instead of the file to avoid a no-op commit every day.
+      - name: Replace only if the text changed
+        id: diff
+        run: |
+          sudo apt-get install -y poppler-utils >/dev/null
+          if [ -f resume.pdf ] && [ "$(pdftotext new.pdf -)" = "$(pdftotext resume.pdf -)" ]; then
+            echo "changed=false" >> "$GITHUB_OUTPUT"
+            rm new.pdf
+          else
+            mv new.pdf resume.pdf
+            echo "changed=true" >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: Commit
+        if: steps.diff.outputs.changed == 'true'
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898333+github-actions[bot]@users.noreply.github.com"
+          git add resume.pdf
+          git commit -m "Update resume.pdf from Google Doc"
+          git push
