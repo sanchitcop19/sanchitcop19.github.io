@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+<title>Happy Anniversary</title>
+<meta name="description" content="A timeline of you two." />
+<meta name="robots" content="noindex, nofollow" />
+<meta name="theme-color" content="#0b0807" />
+
+<meta property="og:type" content="website" />
+<meta property="og:title" content="Happy Anniversary" />
+<meta property="og:description" content="A timeline of you two." />
+
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet" />
+<link rel="stylesheet" href="style.css" />
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>%F0%9F%92%8D</text></svg>" />
+</head>
+<body>
+
+<canvas id="bokeh" aria-hidden="true"></canvas>
+
+<div class="aurora" aria-hidden="true">
+  <span class="blob blob-a"></span>
+  <span class="blob blob-b"></span>
+  <span class="blob blob-c"></span>
+</div>
+<div class="grain" aria-hidden="true"></div>
+
+<!-- ───────────────────────────── HERO ───────────────────────────── -->
+<header class="hero" id="top">
+  <div class="hero-inner">
+    <svg class="rings" viewBox="0 0 92 56" aria-hidden="true" focusable="false">
+      <circle class="ring-a" cx="33" cy="30" r="22" transform="rotate(-90 33 30)" />
+      <circle class="ring-b" cx="59" cy="30" r="22" transform="rotate(90 59 30)" />
+      <path class="ring-glint" d="M33 4 l1.6 4.4 4.4 1.6 -4.4 1.6 -1.6 4.4 -1.6 -4.4 -4.4 -1.6 4.4 -1.6z" />
+    </svg>
+    <p class="eyebrow"><span class="spark" aria-hidden="true"></span><span id="hero-eyebrow">Happy Anniversary</span></p>
+    <h1 class="display" id="hero-name">&nbsp;</h1>
+    <p class="hero-sub" id="hero-sub"></p>
+
+    <div class="together" id="together" hidden>
+      <p class="together-label">Together for</p>
+      <div class="tiles">
+        <div class="tile"><span class="tile-num" id="t-years">0</span><span class="tile-unit">years</span></div>
+        <div class="tile"><span class="tile-num" id="t-days">0</span><span class="tile-unit">days</span></div>
+        <div class="tile"><span class="tile-num" id="t-hours">0</span><span class="tile-unit">hours</span></div>
+        <div class="tile tile-wide"><span class="tile-num" id="t-seconds">0</span><span class="tile-unit">seconds<span class="beat" id="t-beat" aria-hidden="true">♥</span></span></div>
+      </div>
+    </div>
+
+    <div class="hero-rule" aria-hidden="true"></div>
+    <p class="hero-note" id="hero-note"></p>
+  </div>
+  <a class="scroll-cue" href="#poem" aria-label="Scroll down">
+    <span class="cue-text">scroll</span>
+    <span class="cue-track" aria-hidden="true"></span>
+    <svg class="cue-arrow" viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+      <path d="M12 4v14M6 13l6 6 6-6" />
+    </svg>
+  </a>
+</header>
+
+<main>
+  <!-- ──────────────────────────── POEM ──────────────────────────── -->
+  <section class="poem" id="poem" aria-label="A few words for you two">
+    <div class="poem-inner">
+      <p class="poem-label" id="poem-label">A few words, for you two</p>
+      <p class="poem-accessible" id="poem-accessible"></p>
+      <div class="poem-stage">
+        <p class="poem-copy poem-measure" id="poem-measure" aria-hidden="true"></p>
+        <p class="poem-copy poem-typed" id="poem-typed" aria-hidden="true"></p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ─────────────────────────── TIMELINE ─────────────────────────── -->
+  <section class="timeline-wrap" id="timeline" aria-label="Timeline of moments">
+    <div class="spine" aria-hidden="true"><div class="spine-fill" id="spine-fill"></div></div>
+    <ol class="timeline" id="timeline-list"></ol>
+  </section>
+
+  <!-- ──────────────────────── CLOSING ──────────────────────── -->
+  <section class="closing" id="closing">
+    <h2 class="display closing-title" id="closing-title"></h2>
+    <p class="closing-body" id="closing-body"></p>
+    <p class="signoff" id="closing-signoff"></p>
+  </section>
+
+  <!-- Shown only while the page is still using placeholder content. -->
+  <section class="setup" id="setup" hidden>
+    <h2>Setup — only you can see this</h2>
+    <p>This panel disappears once <code>data.js</code> is filled in. Nobody else sees it after that.</p>
+    <ol>
+      <li>Set <code>weddingDate</code> in <code>data.js</code> (like <code>"1996-12-08"</code>). The counter and the "Happy Nth Anniversary" line work themselves out from it.</li>
+      <li>Drop photos into the <code>photos/</code> folder next to this page.</li>
+      <li>Replace the sample moments with real ones — one per photo, oldest first — and make the poem yours.</li>
+      <li>Commit and push. The page updates in about a minute.</li>
+    </ol>
+    <p class="setup-tip">Shortcut: run <code>./add-photos.sh ~/Desktop/mom-dad-photos</code> from this folder — it resizes everything and prints the <code>moments</code> entries ready to paste. Or use the caption editor at <code>/tools/captions.html</code>.</p>
+  </section>
+</main>
+
+<footer class="foot"><a href="#top" class="back-top">back to the top</a></footer>
+
+<!-- ─────────────────────────── LIGHTBOX ─────────────────────────── -->
+<div class="lightbox" id="lightbox" role="dialog" aria-modal="true" aria-label="Photo viewer" hidden>
+  <button class="lb-close" id="lb-close" aria-label="Close">&times;</button>
+  <button class="lb-nav lb-prev" id="lb-prev" aria-label="Previous photo">&#8249;</button>
+  <button class="lb-nav lb-next" id="lb-next" aria-label="Next photo">&#8250;</button>
+  <figure class="lb-figure">
+    <img id="lb-img" alt="" />
+    <figcaption class="lb-cap">
+      <span class="lb-date" id="lb-date"></span>
+      <span class="lb-title" id="lb-title"></span>
+      <span class="lb-text" id="lb-text"></span>
+    </figcaption>
+  </figure>
+</div>
+
+
+<script src="data.js"></script>
+<script src="timeline.js"></script>
+</body>
+</html>
